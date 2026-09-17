@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free MATLAB .mat to CSV Converter — View &amp; Export MAT Files Online</title>
+<meta name="description" content="Open a MATLAB .mat file, list its variables and their shapes, preview the data as a table, and export a variable to CSV, entirely in your browser. No MATLAB or Octave installation needed, and nothing is uploaded.">
+<link rel="stylesheet" href="https://gazetheeupon.github.io/shared-assets/theme.css?v=2">
+<link rel="canonical" href="https://gazetheeupon.github.io/mat-to-csv/">
+<meta property="og:title" content="Free MATLAB .mat to CSV Converter">
+<meta property="og:description" content="Preview a MATLAB .mat file's variables and export one to CSV. Entirely in your browser, nothing uploaded, no MATLAB required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gazetheeupon.github.io/mat-to-csv/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Free MATLAB .mat to CSV Converter">
+<meta name="twitter:description" content="Preview a MATLAB .mat file's variables and export one to CSV. Entirely in your browser, nothing uploaded, no MATLAB required.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Free MATLAB .mat to CSV Converter",
+  "url": "https://gazetheeupon.github.io/mat-to-csv/",
+  "description": "Open a MATLAB .mat file (v5/v6/v7), list its variables and shapes, preview the data, and export a variable to CSV, entirely in your browser.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (runs in web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<style>
+  :root{--bg:#0f1720;--card:#1a2532;--text:#e8edf2;--muted:#93a3b3;--accent:#4fa8ff;--border:#2a3745;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;}
+  header{padding:2rem 1rem 1rem;text-align:center;}
+  h1{font-size:1.6rem;margin:0 0 .4rem;}
+  p.sub{color:var(--muted);margin:0 auto;max-width:660px;}
+  main{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.2rem;}
+  .dropzone{border:2px dashed var(--border);border-radius:10px;padding:2.2rem 1rem;text-align:center;cursor:pointer;transition:border-color .15s;}
+  .dropzone.drag{border-color:var(--accent);}
+  .dropzone input{display:none;}
+  .dropzone .hint{color:var(--muted);font-size:.9rem;margin-top:.4rem;}
+  .fname{font-size:.9rem;color:var(--text);margin-top:.6rem;word-break:break-all;}
+  #status{color:var(--muted);font-size:.9rem;margin-top:.8rem;min-height:1.2em;white-space:pre-line;}
+  #status.error{color:#ff8080;}
+  h2{font-size:1rem;margin:0 0 .8rem;color:var(--text);}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  th{text-align:left;color:var(--muted);font-weight:600;padding:.4rem .5rem;border-bottom:1px solid var(--border);white-space:nowrap;}
+  td{padding:.4rem .5rem;border-bottom:1px solid var(--border);vertical-align:top;}
+  tr.var-row{cursor:pointer;}
+  tr.var-row:hover td{background:#20303f;}
+  tr.var-row.selected td{background:#1c3348;}
+  tr.var-row.errored td{color:#ff8080;font-style:italic;}
+  .tablewrap{overflow-x:auto;}
+  #previewWrap{overflow:auto;max-height:420px;margin-top:.6rem;border:1px solid var(--border);border-radius:8px;}
+  #previewTable td, #previewTable th{white-space:nowrap;}
+  .truncnote{color:var(--muted);font-size:.82rem;margin-top:.5rem;}
+  button.go{background:var(--accent);color:#04121f;border:none;border-radius:8px;padding:.7rem 1.4rem;font-size:1rem;font-weight:600;cursor:pointer;margin-top:1rem;}
+  button.go:disabled{opacity:.5;cursor:not-allowed;}
+  #exportStatus{color:var(--muted);font-size:.85rem;margin-top:.6rem;white-space:pre-line;}
+  #exportStatus.warn{color:#ffb84f;}
+  .privacy{font-size:.85rem;color:var(--muted);}
+  .privacy strong{color:var(--text);}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:1.5rem 1rem 2.5rem;}
+  footer a{color:var(--accent);}
+</style>
+</head>
+<body>
+<header>
+  <h1>MATLAB .mat to CSV Converter</h1>
+  <p class="sub">Drop in a MATLAB <code>.mat</code> file to list its variables, preview one as a table, and export it to CSV &mdash; no MATLAB, Octave, or upload required.</p>
+</header>
+<main>
+  <div class="card">
+    <div class="dropzone" id="dropzone">
+      <div>Drop a .mat file here, or click to choose</div>
+      <div class="hint">MATLAB data files (.mat, v5/v6/v7) &mdash; processed entirely on your device</div>
+      <input type="file" id="fileInput" accept=".mat">
+    </div>
+    <div class="fname" id="fname"></div>
+    <div id="status"></div>
+  </div>
+
+  <div class="card" id="varsCard" style="display:none;">
+    <h2 id="varsHeading">Variables</h2>
+    <div class="tablewrap">
+      <table id="varsTable">
+        <thead>
+          <tr><th>Name</th><th>Class</th><th>Shape</th><th>Elements</th></tr>
+        </thead>
+        <tbody id="varsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="previewCard" style="display:none;">
+    <h2 id="previewHeading">Preview</h2>
+    <div id="previewWrap">
+      <table id="previewTable"></table>
+    </div>
+    <div class="truncnote" id="truncNote"></div>
+    <button class="go" id="exportBtn">Export this variable to CSV</button>
+    <div id="exportStatus"></div>
+  </div>
+
+  <div class="card">
+    <p class="privacy"><strong>How this works:</strong> this page parses the MAT-file level 5 binary format (the format MATLAB calls v5, v6, and v7) directly in your browser tab, including the zlib-compressed variables MATLAB writes by default &mdash; the file is read with the File API and never uploaded anywhere.</p>
+    <p class="privacy" style="margin-top:.6rem;"><strong>MATLAB v7.3 files are HDF5-based</strong> and use a completely different container format under the hood; this page detects them and tells you, but doesn't parse them yet. Re-save as v7 in MATLAB (<code>save("file.mat","-v7")</code>) first, or use Python's h5py/scipy for v7.3 files directly.</p>
+    <p class="privacy" style="margin-top:.6rem;"><strong>Cell arrays, struct arrays, sparse matrices, and function handles</strong> aren't supported for CSV export &mdash; plain numeric, logical, and character (string) variables are. N-dimensional arrays (more than 2 dimensions) also aren't supported; only 2-D matrices and vectors export.</p>
+  </div>
+
+
+  <div class="card faq">
+    <h2>Troubleshooting</h2>
+    <details><summary>"This is a MATLAB v7.3 file" message</summary>
+      <p>Starting around MATLAB R2006b, <code>save</code> can write v7.3 files, which switch the container format entirely to HDF5 &mdash; a different binary layout this page doesn't parse. In MATLAB, re-save with <code>save("file.mat","-v7")</code> to get a format this page can open, or use Python's <code>h5py</code> or <code>scipy.io</code> to read a v7.3 file directly.</p>
+    </details>
+    <details><summary>A variable shows as "not supported for CSV export"</summary>
+      <p>Cell arrays, struct arrays, sparse matrices, and function handles don't map cleanly onto a flat CSV grid, so this page skips them and shows the variable's class instead. Plain numeric matrices, logical arrays, and character arrays (strings) all export normally.</p>
+    </details>
+    <details><summary>A variable shows as a "3-D array" (or higher) that isn't supported</summary>
+      <p>CSV is inherently a 2-D format. If a variable has more than 2 dimensions, export a 2-D slice of it instead &mdash; in MATLAB, something like <code>squeeze(myArray(:,:,1))</code> before saving.</p>
+    </details>
+  </div>
+
+  <div class="card cli">
+    <h2>Prefer the command line?</h2>
+    <div class="cli-block">python -c "
+import scipy.io as sio
+d = sio.loadmat('file.mat')
+d['myvar'].tofile('out.csv', sep=',')
+"</div>
+    <p class="privacy">SciPy's <code>scipy.io.loadmat</code> reads the same v5/v6/v7 format this page does (it does not read v7.3 either &mdash; that needs <code>h5py</code>). Octave, MATLAB's free-software counterpart, can also open and re-save a .mat file if you have it installed.</p>
+  </div>
+
+
+  <div id="ad-slot"></div>
+</main>
+<script src="fflate.bundle.js"></script>
+<script src="matparser.js"></script>
+<script src="app.js"></script>
+<script defer src="https://gazetheeupon.github.io/shared-assets/site.js"></script>
+</body>
+</html>
