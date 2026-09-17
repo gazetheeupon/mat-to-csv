@@ -1,0 +1,26 @@
+/*
+ * Vendored subset of fflate (https://github.com/101arrowz/fflate) v0.8.3 — unzlibSync only.
+ * fflate is MIT licensed:
+ *
+ * MIT License
+ * 
+ * Copyright (c) 2026 Arjun Barrett
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. */
+(()=>{var h=Uint8Array,S=Uint16Array,gr=Int32Array,tr=new h([0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0,0,0,0]),er=new h([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,0,0]),yr=new h([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15]),ir=function(r,n){for(var t=new S(31),o=0;o<31;++o)t[o]=n+=1<<r[o-1];for(var i=new gr(t[30]),o=1;o<30;++o)for(var c=t[o];c<t[o+1];++c)i[c]=c-t[o]<<5|o;return{b:t,r:i}},ar=ir(tr,2),or=ar.b,wr=ar.r;or[28]=258,wr[258]=28;var sr=ir(er,0),mr=sr.b,Ir=sr.r,Y=new S(32768);for(a=0;a<32768;++a)g=(a&43690)>>1|(a&21845)<<1,g=(g&52428)>>2|(g&13107)<<2,g=(g&61680)>>4|(g&3855)<<4,Y[a]=((g&65280)>>8|(g&255)<<8)>>1;var g,a,I=(function(r,n,t){for(var o=r.length,i=0,c=new S(n);i<o;++i)r[i]&&++c[r[i]-1];var y=new S(n);for(i=1;i<n;++i)y[i]=y[i-1]+c[i-1]<<1;var p;if(t){p=new S(1<<n);var z=15-n;for(i=0;i<o;++i)if(r[i])for(var U=i<<4|r[i],w=n-r[i],e=y[r[i]-1]++<<w,s=e|(1<<w)-1;e<=s;++e)p[Y[e]>>z]=U}else for(p=new S(o),i=0;i<o;++i)r[i]&&(p[i]=Y[y[r[i]-1]++]>>15-r[i]);return p}),B=new h(288);for(a=0;a<144;++a)B[a]=8;var a;for(a=144;a<256;++a)B[a]=9;var a;for(a=256;a<280;++a)B[a]=7;var a;for(a=280;a<288;++a)B[a]=8;var a,fr=new h(32);for(a=0;a<32;++a)fr[a]=5;var a;var xr=I(B,9,1);var zr=I(fr,5,1),V=function(r){for(var n=r[0],t=1;t<r.length;++t)r[t]>n&&(n=r[t]);return n},u=function(r,n,t){var o=n/8|0;return(r[o]|r[o+1]<<8)>>(n&7)&t},W=function(r,n){var t=n/8|0;return(r[t]|r[t+1]<<8|r[t+2]<<16)>>(n&7)},Ar=function(r){return(r+7)/8|0},Mr=function(r,n,t){return(n==null||n<0)&&(n=0),(t==null||t>r.length)&&(t=r.length),new h(r.subarray(n,t))};var Sr=["unexpected EOF","invalid block type","invalid length/literal","invalid distance","stream finished","no stream handler",,"no callback","invalid UTF-8 data","extra field too long","date not in range 1980-2099","filename too long","stream finishing","invalid zip data"],l=function(r,n,t){var o=new Error(n||Sr[r]);if(o.code=r,Error.captureStackTrace&&Error.captureStackTrace(o,l),!t)throw o;return o},Ur=function(r,n,t,o){var i=r.length,c=o?o.length:0;if(!i||n.f&&!n.l)return t||new h(0);var y=!t,p=y||n.i!=2,z=n.i;y&&(t=new h(i*3));var U=function(_){var rr=t.length;if(_>rr){var nr=new h(Math.max(rr*2,_));nr.set(t),t=nr}},w=n.f||0,e=n.p||0,s=n.b||0,x=n.l,Z=n.d,F=n.m,D=n.n,G=i*8;do{if(!x){w=u(r,e,1);var O=u(r,e+1,3);if(e+=3,O)if(O==1)x=xr,Z=zr,F=9,D=5;else if(O==2){var P=u(r,e,31)+257,j=u(r,e+10,15)+4,J=P+u(r,e+5,31)+1;e+=14;for(var T=new h(J),$=new h(19),f=0;f<j;++f)$[yr[f]]=u(r,e+f*3,7);e+=j*3;for(var K=V($),ur=(1<<K)-1,lr=I($,K,1),f=0;f<J;){var Q=lr[u(r,e,ur)];e+=Q&15;var v=Q>>4;if(v<16)T[f++]=v;else{var A=0,E=0;for(v==16?(E=3+u(r,e,3),e+=2,A=T[f-1]):v==17?(E=3+u(r,e,7),e+=3):v==18&&(E=11+u(r,e,127),e+=7);E--;)T[f++]=A}}var X=T.subarray(0,P),m=T.subarray(P);F=V(X),D=V(m),x=I(X,F,1),Z=I(m,D,1)}else l(1);else{var v=Ar(e)+4,q=r[v-4]|r[v-3]<<8,L=v+q;if(L>i){z&&l(0);break}p&&U(s+q),t.set(r.subarray(v,L),s),n.b=s+=q,n.p=e=L*8,n.f=w;continue}if(e>G){z&&l(0);break}}p&&U(s+131072);for(var vr=(1<<F)-1,cr=(1<<D)-1,H=e;;H=e){var A=x[W(r,e)&vr],M=A>>4;if(e+=A&15,e>G){z&&l(0);break}if(A||l(2),M<256)t[s++]=M;else if(M==256){H=e,x=null;break}else{var k=M-254;if(M>264){var f=M-257,C=tr[f];k=u(r,e,(1<<C)-1)+or[f],e+=C}var N=Z[W(r,e)&cr],R=N>>4;N||l(3),e+=N&15;var m=mr[R];if(R>3){var C=er[R];m+=W(r,e)&(1<<C)-1,e+=C}if(e>G){z&&l(0);break}p&&U(s+131072);var d=s+k;if(s<m){var b=c-m,pr=Math.min(m,d);for(b+s<0&&l(3);s<pr;++s)t[s]=o[b+s]}for(;s<d;++s)t[s]=t[s-m]}}n.l=x,n.p=H,n.b=s,n.f=w,x&&(w=1,n.m=F,n.d=Z,n.n=D)}while(!w);return s!=t.length&&y?Mr(t,0,s):t.subarray(0,s)};var Fr=new h(0);var Dr=function(r,n){return((r[0]&15)!=8||r[0]>>4>7||(r[0]<<8|r[1])%31)&&l(6,"invalid zlib data"),(r[1]>>5&1)==+!n&&l(6,"invalid zlib data: "+(r[1]&32?"need":"unexpected")+" dictionary"),(r[1]>>3&4)+2};function hr(r,n){return Ur(r.subarray(Dr(r,n&&n.dictionary),-4),{i:2},n&&n.out,n&&n.dictionary)}var Tr=typeof TextDecoder<"u"&&new TextDecoder,Cr=0;try{Tr.decode(Fr,{stream:!0}),Cr=1}catch{}window.fflateUnzlibSync=hr;})();
