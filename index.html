@@ -63,6 +63,38 @@
   footer{text-align:center;color:var(--muted);font-size:.82rem;padding:1.5rem 1rem 2.5rem;}
   footer a{color:var(--accent);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "\"This is a MATLAB v7.3 file\" message",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Starting around MATLAB R2006b, save can write v7.3 files, which switch the container format entirely to HDF5 \u2014 a different binary layout this page doesn't parse. In MATLAB, re-save with save(\"file.mat\",\"-v7\") to get a format this page can open, or use Python's h5py or scipy.io to read a v7.3 file directly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "A variable shows as \"not supported for CSV export\"",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cell arrays, struct arrays, sparse matrices, and function handles don't map cleanly onto a flat CSV grid, so this page skips them and shows the variable's class instead. Plain numeric matrices, logical arrays, and character arrays (strings) all export normally."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "A variable shows as a \"3-D array\" (or higher) that isn't supported",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CSV is inherently a 2-D format. If a variable has more than 2 dimensions, export a 2-D slice of it instead \u2014 in MATLAB, something like squeeze(myArray(:,:,1)) before saving."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <header>
